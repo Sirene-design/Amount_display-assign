@@ -1,6 +1,8 @@
 const productElement = document.getElementById("product");
 const numberElement = document.getElementById("number");
 
+const popup = document.getElementById("popup");
+const popupText = document.getElementById("popup-text");
 const products = {
   1: {
     name: "Original blend 200g",
@@ -22,7 +24,15 @@ const products = {
 
 let purchases = [];
 
-// Add product
+function showPopup(message) {
+  popupText.innerText = message;
+  popup.style.display = "flex";
+}
+
+function closePopup() {
+  popup.style.display = "none";
+}
+
 function add() {
   const id = productElement.value;
   const number = parseInt(numberElement.value);
@@ -40,22 +50,26 @@ function add() {
   };
 
   purchases.push(purchase);
+  const amount = product.price * number;
 
-  window.alert(display());
+  showPopup(
+    `product: ${product.name}
+    price: ${product.price} yen
+    Quantity: ${number}
+    Amount: ${amount} yen`
+  );
 }
 function display() {
   let message = "";
 
   for (let index = 0; index < purchases.length; index++) {
-    message += `${purchases[index].name} ${purchases[index].price}yen:${purchases[index].number}`;
+     const purchase = purchases[index];
+    const amount = purchase.price * purchase.number;
 
-    if (purchases[index].number === 1) {
-      message += " item";
-    } else {
-      message += " items";
-    }
+    message += `${purchase.name}
+    ${purchase.price} yen × ${purchase.number} item = ${amount} yen
 
-    message += "\n";
+`;
   }
 
   return message;
@@ -78,7 +92,7 @@ function calc() {
   }
   const total = sum + shipping;
 
-  window.alert(
+  showPopup(
     `${display()}
 Subtotal ${sum} yen
 Shipping ${shipping} yen
